@@ -1,247 +1,875 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GadgetStore Management System</title>
+    <title>Toko NASYWA | nasywa-ui34</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #f4f7f6;
-            color: #333;
+            background-color: #121212;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* PERBAIKAN: Hanya layar aktif yang dirender dan bisa diklik */
+        .screen {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            background-color: #181818;
+            display: none; /* Menyembunyikan layar pasif secara total */
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            z-index: 1;
+        }
+
+        .screen.active {
+            display: flex; /* Hanya layar aktif yang muncul */
+            z-index: 10;
+        }
+
+        /* Layar Tengah / Form */
+        .centered-screen {
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
 
-        /* 1. Header Utama */
-        header {
+        .card-box {
+            background-color: #222222;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            padding: 28px 20px;
+            width: 100%;
+            max-width: 380px;
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 20;
         }
 
-        header h1 {
-            font-size: 2.2rem;
-            letter-spacing: 1px;
+        .store-icon {
+            font-size: 45px;
+            color: #82b388;
+            margin-bottom: 15px;
         }
 
-        .container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #ffffff;
         }
 
-        /* Kartu Pembatas Section (box-shadow & border-radius) */
-        .card-section {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-            border: 1px solid #e0e0e0;
+        p.subtitle {
+            font-size: 13px;
+            color: #a0a0a0;
+            margin-bottom: 22px;
         }
 
-        .card-section h2 {
-            margin-bottom: 20px;
-            color: #1e3c72;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
-        }
-
-        /* 2. Fitur Panel Admin */
-        .admin-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
+        /* Form Inputs */
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
+            text-align: left;
+            margin-bottom: 16px;
         }
 
         .form-group label {
+            display: block;
+            font-size: 12px;
             font-weight: 600;
-            font-size: 0.9rem;
+            color: #d0d0d0;
+            margin-bottom: 6px;
         }
 
-        .form-group input, 
-        .form-group textarea {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
+        .form-input, .form-textarea {
+            width: 100%;
+            background-color: #2c2c2c;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: #ffffff;
+            font-size: 13px;
+            outline: none;
         }
 
-        .form-group textarea {
-            resize: vertical;
-            height: 90px;
+        .form-input:focus, .form-textarea:focus {
+            border-color: #2e5a35;
         }
 
-        .btn-submit {
-            background-color: #28a745;
-            color: white;
+        .form-textarea {
+            resize: none;
+            height: 70px;
+        }
+
+        /* Buttons Fix */
+        .btn {
+            width: 100%;
+            border-radius: 8px;
             padding: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            outline: none;
+            user-select: none;
+            position: relative;
+            z-index: 30; /* Dipastikan paling atas agar selalu bisa diklik */
+        }
+
+        .btn-green {
+            background-color: #214d2a;
+            color: #ffffff;
+            border: 1px solid #2e5a35;
+            margin-top: 10px;
+        }
+
+        .btn-green:active {
+            background-color: #1a3e22;
+        }
+
+        .btn-blue {
+            background-color: #1e3a4b;
+            color: #ffffff;
+            border: 1px solid #2a4d63;
+            margin-top: 12px;
+        }
+
+        .btn-blue:active {
+            background-color: #152935;
+        }
+
+        /* Header Navbar */
+        .navbar {
+            background-color: #0d1a0f;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #1a331e;
+        }
+
+        .navbar-brand {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #ffffff;
+        }
+
+        .btn-logout {
+            background-color: #b71c1c;
+            color: white;
             border: none;
             border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
         }
 
-        .btn-submit:hover {
-            background-color: #218838;
+        /* Area Konten */
+        .content {
+            padding: 16px 14px 80px 14px;
+            overflow-y: auto;
+            flex: 1;
         }
 
-        /* 3. Fitur Panel Pembeli (Grid Responsif) */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 16px 0 12px 0;
+            color: #ffffff;
         }
 
+        /* Horizontal Scroll Bestseller */
+        .horizontal-scroll {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+        }
+        .horizontal-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Product Cards */
         .product-card {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            background-color: #222222;
+            border: 1px solid #2c2c2c;
+            border-radius: 12px;
             overflow: hidden;
-            background: #fff;
             display: flex;
             flex-direction: column;
-            padding: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: relative;
         }
 
-        .product-card img {
+        .product-card.horizontal {
+            min-width: 210px;
+            max-width: 210px;
+        }
+
+        .badge-bestseller {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background-color: #1e3a24;
+            color: #82b388;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            z-index: 2;
+        }
+
+        .product-img {
             width: 100%;
-            height: 180px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 6px;
-            margin-bottom: 12px;
+            background-color: #111;
+        }
+
+        .product-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
 
         .product-title {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
         }
 
         .product-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .product-desc {
+            font-size: 11px;
+            color: #888888;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .spec-link {
+            font-size: 11px;
+            color: #82b388;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 6px;
+        }
+
+        .rating-sold {
+            font-size: 11px;
+            color: #aaa;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rating-star {
+            color: #ffc107;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: auto;
+        }
+
+        .btn-cart {
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        .btn-buy-now {
+            flex: 1;
+            background-color: #214d2a;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background-color: #0e160f;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #1a2a1d;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #666;
+            font-size: 10px;
+            gap: 4px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #ffffff;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -4px;
+            right: 6px;
+            background-color: #b71c1c;
+            color: white;
+            font-size: 9px;
+            padding: 1px 5px;
+            border-radius: 10px;
             font-weight: bold;
-            color: #d9534f;
-            font-size: 1.2rem;
+        }
+
+        /* Order Confirmation Box */
+        .checkout-box {
+            background-color: #222222;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        .checkout-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #d0d0d0;
             margin-bottom: 10px;
         }
 
-        .product-description {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 15px;
-            flex-grow: 1;
+        .checkout-info-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
         }
 
-        .product-card video {
-            width: 100%;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            background-color: #000;
+        .checkout-info-sub {
+            font-size: 12px;
+            color: #888888;
+            margin-top: 2px;
         }
 
-        .btn-buy {
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .payment-card {
+            background-color: #1a2a1d;
+            border: 1px solid #2e5a35;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .payment-card.selected {
+            border-color: #82b388;
+        }
+
+        .payment-card i {
+            font-size: 20px;
+            color: #82b388;
+        }
+
+        .payment-text strong {
             display: block;
-            text-align: center;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: background 0.3s;
+            font-size: 12px;
+            color: #ffffff;
         }
 
-        .btn-buy:hover {
-            background-color: #0056b3;
+        .payment-text span {
+            font-size: 10px;
+            color: #888888;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #cccccc;
+            margin-bottom: 6px;
+        }
+
+        .summary-row.total {
+            border-top: 1px dashed #3a3a3a;
+            padding-top: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .success-circle {
+            width: 60px;
+            height: 60px;
+            background-color: #82b388;
+            color: #181818;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 16px auto;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>GadgetStore Management System</h1>
-    </header>
-
-    <div class="container">
-        
-        <section class="card-section">
-            <h2>Panel Administrator (Manajemen Produk & Media)</h2>
-            <form class="admin-form">
-                <div class="form-group">
-                    <label for="nama">Nama Produk:</label>
-                    <input type="text" id="nama" placeholder="Contoh: Smartphone Premium" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="deskripsi-harga">Deskripsi & Harga Produk:</label>
-                    <textarea id="deskripsi-harga" placeholder="Harga: Rp 12.000.000&#10;Deskripsi: Layar 120Hz Super AMOLED, RAM 12GB..." required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="url-gambar">URL Gambar Produk (image source):</label>
-                    <input type="text" id="url-gambar" placeholder="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" required>
-                </div>
-
-                <button type="button" class="btn-submit" onclick="alert('Simpan Produk ke Database Berhasil!')">
-                    Simpan Produk ke Database
-                </button>
-            </form>
-        </section>
-
-        <section class="card-section">
-            <h2>Panel Pembeli (Katalog & Transaksi)</h2>
-            <div class="product-grid">
-
-                <div class="product-card">
-                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" alt="Smartphone Premium">
-                    <h3 class="product-title">Smartphone Premium</h3>
-                    <div class="product-price">Rp 12.000.000</div>
-                    <p class="product-description">Layar 120Hz Super AMOLED, RAM 12GB, Chipset Snapdragon Terbaru.</p>
-                    
-                    <video controls>
-                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
-                        Browser Anda tidak mendukung penayangan video.
-                    </video>
-                    
-                    <a href="#" class="btn-buy" onclick="alert('Status Pesanan: Pesanan belum dibayar.')">Beli Sekarang</a>
-                </div>
-
-                <div class="product-card">
-                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500" alt="Laptop Ultra">
-                    <h3 class="product-title">Laptop Ultra</h3>
-                    <div class="product-price">Rp 18.500.000</div>
-                    <p class="product-description">Prosesor Intel Core i9, RAM 16GB DDR5, SSD 1TB NVMe, Layar 4K Touchscreen.</p>
-                    
-                    <video controls>
-                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
-                        Browser Anda tidak mendukung penayangan video.
-                    </video>
-                    
-                    <a href="#" class="btn-buy" onclick="alert('Status Pesanan: Pesanan diproses.')">Beli Sekarang</a>
-                </div>
-
-            </div>
-        </section>
-
+    <div id="screen-landing" class="screen centered-screen active">
+        <div class="card-box">
+            <div class="store-icon"><i class="fa-solid fa-store"></i></div>
+            <h2>Toko NASYWA</h2>
+            <p class="subtitle">nasywa-ui34 • Pilih akses masuk aplikasi:</p>
+            
+            <button type="button" class="btn btn-green" onclick="goToScreen('screen-email')">
+                <i class="fa-solid fa-lock"></i> Masuk sebagai Pembeli
+            </button>
+            <button type="button" class="btn btn-blue" onclick="goToScreen('screen-admin')">
+                <i class="fa-solid fa-user-shield"></i> Masuk sebagai Admin
+            </button>
+        </div>
     </div>
 
+    <div id="screen-email" class="screen centered-screen">
+        <div class="card-box">
+            <h2>Masuk Pembeli</h2>
+            <p class="subtitle">Masukkan email aktif kamu untuk melanjutkan</p>
+            
+            <div class="form-group">
+                <label>Alamat Email</label>
+                <input type="email" id="input-email" class="form-input" placeholder="contoh: nasywa@email.com" value="nasywa@email.com">
+            </div>
+
+            <button type="button" class="btn btn-green" onclick="submitEmail()">
+                Lanjut <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button type="button" class="btn btn-green" style="background-color: #333;" onclick="goToScreen('screen-landing')">
+                <i class="fa-solid fa-arrow-left"></i> Kembali
+            </button>
+        </div>
+    </div>
+
+    <div id="screen-profile" class="screen centered-screen">
+        <div class="card-box">
+            <h2>Lengkapi Profil</h2>
+            <p class="subtitle">Masukkan nama pengguna dan kata sandi kamu</p>
+            
+            <div class="form-group">
+                <label>Nama Pengguna (Username)</label>
+                <input type="text" id="input-username" class="form-input" placeholder="Nasywa" value="Nasywa">
+            </div>
+            <div class="form-group">
+                <label>Kata Sandi</label>
+                <input type="password" id="input-password" class="form-input" placeholder="••••••••" value="12345678">
+            </div>
+
+            <button type="button" class="btn btn-green" onclick="submitProfile()">
+                Lanjut <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="screen-contact" class="screen centered-screen">
+        <div class="card-box">
+            <h2>Kontak & Alamat</h2>
+            <p class="subtitle">Masukkan nomor telepon dan alamat pengiriman kamu</p>
+            
+            <div class="form-group">
+                <label>Nomor Telepon</label>
+                <input type="tel" id="input-phone" class="form-input" placeholder="087711701396" value="087711701396">
+            </div>
+            <div class="form-group">
+                <label>Alamat Pengiriman Utama</label>
+                <textarea id="input-address" class="form-textarea" placeholder="Jl. Beringin asri">Jl. Beringin asri</textarea>
+            </div>
+
+            <button type="button" class="btn btn-green" onclick="submitContact()">
+                Masuk / Daftar <i class="fa-solid fa-check"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="screen-welcome" class="screen centered-screen">
+        <div class="card-box">
+            <div class="success-circle">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h2>Selamat datang, <span id="display-name">Nasywa</span>!</h2>
+            <p class="subtitle">Nikmati pengalaman belanja Gadget pilihan terbaik di nasywa-ui34.</p>
+
+            <button type="button" class="btn btn-green" onclick="goToScreen('screen-home')">
+                Masuk ke Beranda <i class="fa-solid fa-lock"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="screen-home" class="screen">
+        <div class="navbar">
+            <div class="navbar-brand">NASYWA</div>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+
+        <div class="content">
+            <div class="section-header">
+                <i class="fa-solid fa-fire" style="color: #ff6b6b;"></i> Produk Bestseller
+            </div>
+
+            <div class="horizontal-scroll">
+                <div class="product-card horizontal">
+                    <span class="badge-bestseller">Bestseller</span>
+                    <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400" class="product-img" alt="iPhone 15">
+                    <div class="product-info">
+                        <div class="product-title">iPhone 15 Pro Max</div>
+                        <div class="product-price">Rp 21.999.000</div>
+                        <div class="product-desc">Smartphone flagship dengan chip A17 Pro, bodi titanium...</div>
+                        <a href="#" class="spec-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Spesifikasi Resmi</a>
+                        <div class="rating-sold"><i class="fa-solid fa-star rating-star"></i> 4.9 | terjual 450</div>
+                        <div class="card-actions">
+                            <button class="btn-cart" onclick="addToCart('iPhone 15 Pro Max')"><i class="fa-solid fa-cart-shopping"></i></button>
+                            <button class="btn-buy-now" onclick="openCheckout('iPhone 15 Pro Max', '21.999.000')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card horizontal">
+                    <span class="badge-bestseller">Bestseller</span>
+                    <img src="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400" class="product-img" alt="Samsung S24">
+                    <div class="product-info">
+                        <div class="product-title">Samsung Galaxy S24 Ultra</div>
+                        <div class="product-price">Rp 19.999.000</div>
+                        <div class="product-desc">Dilengkapi Galaxy AI pintar, Stylus Pen bawaan, dan...</div>
+                        <a href="#" class="spec-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Spesifikasi Resmi</a>
+                        <div class="rating-sold"><i class="fa-solid fa-star rating-star"></i> 4.9 | terjual 380</div>
+                        <div class="card-actions">
+                            <button class="btn-cart" onclick="addToCart('Samsung Galaxy S24 Ultra')"><i class="fa-solid fa-cart-shopping"></i></button>
+                            <button class="btn-buy-now" onclick="openCheckout('Samsung Galaxy S24 Ultra', '19.999.000')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card horizontal">
+                    <span class="badge-bestseller">Bestseller</span>
+                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400" class="product-img" alt="MacBook Pro">
+                    <div class="product-info">
+                        <div class="product-title">MacBook Pro M3 14 Inch</div>
+                        <div class="product-price">Rp 25.999.000</div>
+                        <div class="product-desc">Laptop profesional performa tinggi dengan Chipset Appl...</div>
+                        <a href="#" class="spec-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Spesifikasi Resmi</a>
+                        <div class="rating-sold"><i class="fa-solid fa-star rating-star"></i> 4.8 | terjual 210</div>
+                        <div class="card-actions">
+                            <button class="btn-cart" onclick="addToCart('MacBook Pro M3 14 Inch')"><i class="fa-solid fa-cart-shopping"></i></button>
+                            <button class="btn-buy-now" onclick="openCheckout('MacBook Pro M3 14 Inch', '25.999.000')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <i class="fa-solid fa-mobile-screen-button"></i> Koleksi Pilihan
+            </div>
+
+            <div class="grid-2">
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400" class="product-img" alt="Xiaomi 14">
+                    <div class="product-info">
+                        <div class="product-title">Xiaomi 14 Ultra</div>
+                        <div class="product-price">Rp 16.999.000</div>
+                        <div class="product-desc">Smartphone fotografi legendaris kolaborasi Leica.</div>
+                        <a href="#" class="spec-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Spesifikasi Resmi</a>
+                        <div class="rating-sold"><i class="fa-solid fa-star rating-star"></i> 4.8 | terjual 120</div>
+                        <div class="card-actions">
+                            <button class="btn-cart" onclick="addToCart('Xiaomi 14 Ultra')"><i class="fa-solid fa-cart-shopping"></i></button>
+                            <button class="btn-buy-now" onclick="openCheckout('Xiaomi 14 Ultra', '16.999.000')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" class="product-img" alt="Sony Headphones">
+                    <div class="product-info">
+                        <div class="product-title">Sony WH-1000XM5 Headphones</div>
+                        <div class="product-price">Rp 5.499.000</div>
+                        <div class="product-desc">Headphone Peredam Bising (Noise Cancelling) terbaik.</div>
+                        <a href="#" class="spec-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Spesifikasi Resmi</a>
+                        <div class="rating-sold"><i class="fa-solid fa-star rating-star"></i> 4.9 | terjual 310</div>
+                        <div class="card-actions">
+                            <button class="btn-cart" onclick="addToCart('Sony WH-1000XM5 Headphones')"><i class="fa-solid fa-cart-shopping"></i></button>
+                            <button class="btn-buy-now" onclick="openCheckout('Sony WH-1000XM5 Headphones', '5.499.000')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="goToScreen('screen-home')">
+                <i class="fa-solid fa-house"></i>
+                <span>Beranda</span>
+            </div>
+            <div class="nav-item" onclick="openCheckout('Sony WH-1000XM5 Headphones', '5.499.000')">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="nav-badge" id="cart-count">1</span>
+                <span>Keranjang</span>
+            </div>
+            <div class="nav-item" onclick="alert('Profil: ' + userData.username)">
+                <i class="fa-solid fa-user"></i>
+                <span>Profil</span>
+            </div>
+            <div class="nav-item" onclick="alert('Belum ada pesanan selesai.')">
+                <i class="fa-solid fa-box-archive"></i>
+                <span>Pesanan</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-checkout" class="screen">
+        <div class="navbar">
+            <div class="navbar-brand">NASYWA</div>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+
+        <div class="content">
+            <div class="section-header" style="justify-content: center;">
+                <i class="fa-regular fa-file-lines"></i> Konfirmasi Pesanan
+            </div>
+
+            <div class="checkout-box">
+                <div class="checkout-title">Alamat Pengiriman:</div>
+                <div class="checkout-info-name" id="co-name-phone">Nasywa (087711701396)</div>
+                <div class="checkout-info-sub" id="co-address">Jl. Beringin asri</div>
+            </div>
+
+            <div class="checkout-box">
+                <div class="checkout-title">Metode Pembayaran:</div>
+                <div class="payment-methods">
+                    <div class="payment-card selected">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <div class="payment-text">
+                            <strong>COD</strong>
+                            <span>Bayar di Tempat</span>
+                        </div>
+                    </div>
+                    <div class="payment-card">
+                        <i class="fa-solid fa-qrcode"></i>
+                        <div class="payment-text">
+                            <strong>QRIS</strong>
+                            <span>Scan Barcode</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-box">
+                <div class="checkout-title">Ringkasan Produk:</div>
+                <div class="summary-row">
+                    <span id="co-item-name">Sony WH-1000XM5 Headphones (x1)</span>
+                    <span id="co-item-price">Rp 5.499.000</span>
+                </div>
+                <div class="summary-row">
+                    <span>Ongkos Kirim (Flat):</span>
+                    <span>Rp 5.000</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total Tagihan:</span>
+                    <span id="co-total-price">Rp 5.504.000</span>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-green" onclick="processCheckout()">
+                <i class="fa-solid fa-check-circle"></i> Klik Checkout
+            </button>
+            <button type="button" class="btn btn-green" style="background-color: #333;" onclick="goToScreen('screen-home')">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+            </button>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="goToScreen('screen-home')">
+                <i class="fa-solid fa-house"></i>
+                <span>Beranda</span>
+            </div>
+            <div class="nav-item active">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="nav-badge">1</span>
+                <span>Keranjang</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>Profil</span>
+            </div>
+            <div class="nav-item">
+                <i class="fa-solid fa-box-archive"></i>
+                <span>Pesanan</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-admin" class="screen">
+        <div class="navbar">
+            <div class="navbar-brand">ADMIN NASYWA</div>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
+        <div class="content" style="text-align: center; padding-top: 40px;">
+            <i class="fa-solid fa-user-shield" style="font-size: 50px; color: #1e3a4b; margin-bottom: 15px;"></i>
+            <h2>Panel Admin @nasywa-ui34</h2>
+            <p class="subtitle">Kelola produk, pesanan, dan transaksi toko di sini.</p>
+            <button type="button" class="btn btn-green" onclick="goToScreen('screen-landing')">
+                Kembali ke Depan
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let userData = {
+            email: 'nasywa@email.com',
+            username: 'Nasywa',
+            phone: '087711701396',
+            address: 'Jl. Beringin asri'
+        };
+
+        let currentCart = {
+            name: 'Sony WH-1000XM5 Headphones',
+            price: 5499000
+        };
+
+        // Fungsi Utama Navigasi Layar
+        function goToScreen(screenId) {
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => {
+                screen.classList.remove('active');
+            });
+
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
+        }
+
+        function submitEmail() {
+            const emailInput = document.getElementById('input-email').value;
+            if(emailInput) userData.email = emailInput;
+            goToScreen('screen-profile');
+        }
+
+        function submitProfile() {
+            const usernameInput = document.getElementById('input-username').value;
+            if(usernameInput) userData.username = usernameInput;
+            goToScreen('screen-contact');
+        }
+
+        function submitContact() {
+            const phoneInput = document.getElementById('input-phone').value;
+            const addressInput = document.getElementById('input-address').value;
+
+            if(phoneInput) userData.phone = phoneInput;
+            if(addressInput) userData.address = addressInput;
+
+            document.getElementById('display-name').innerText = userData.username;
+            goToScreen('screen-welcome');
+        }
+
+        function openCheckout(itemName, priceStr) {
+            const numericPrice = parseInt(priceStr.replace(/\./g, ''));
+            currentCart.name = itemName;
+            currentCart.price = numericPrice;
+
+            document.getElementById('co-name-phone').innerText = userData.username + ' (' + (userData.phone || '087711701396') + ')';
+            document.getElementById('co-address').innerText = userData.address || 'Jl. Beringin asri';
+            document.getElementById('co-item-name').innerText = itemName + ' (x1)';
+            document.getElementById('co-item-price').innerText = 'Rp ' + priceStr;
+            
+            const total = numericPrice + 5000;
+            document.getElementById('co-total-price').innerText = 'Rp ' + total.toLocaleString('id-ID');
+
+            goToScreen('screen-checkout');
+        }
+
+        function addToCart(itemName) {
+            alert('"' + itemName + '" berhasil ditambahkan ke keranjang!');
+        }
+
+        function processCheckout() {
+            alert('Checkout Berhasil!\n\nPesanan ' + currentCart.name + ' sedang diproses oleh Admin Nasywa.');
+            goToScreen('screen-home');
+        }
+
+        function logout() {
+            goToScreen('screen-landing');
+        }
+    </script>
 </body>
 </html>
