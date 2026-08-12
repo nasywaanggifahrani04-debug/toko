@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GadgetStore Management System</title>
     <style>
+        /* Base & Reset Styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -34,6 +35,7 @@
             letter-spacing: 1px;
         }
 
+        /* Layout Container */
         .container {
             display: flex;
             flex-direction: column;
@@ -42,7 +44,7 @@
             margin: 0 auto;
         }
 
-        /* Style Kartu Pembatas Section */
+        /* Kartu Section Pembatas */
         .card-section {
             background: #ffffff;
             border-radius: 12px;
@@ -105,7 +107,7 @@
             background-color: #218838;
         }
 
-        /* 3. Fitur Panel Pembeli */
+        /* 3. Fitur Panel Pembeli (Katalog Grid) */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -184,7 +186,7 @@
         
         <section class="card-section">
             <h2>Panel Administrator (Manajemen Produk & Media)</h2>
-            <form class="admin-form">
+            <form class="admin-form" id="form-produk">
                 <div class="form-group">
                     <label for="nama">Nama Produk:</label>
                     <input type="text" id="nama" placeholder="Contoh: Smartphone Premium" required>
@@ -202,15 +204,15 @@
 
                 <div class="form-group">
                     <label for="url-gambar">URL Gambar Produk (image source):</label>
-                    <input type="url" id="url-gambar" placeholder="https://example.com/gambar.jpg" required>
+                    <input type="url" id="url-gambar" placeholder="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" required>
                 </div>
 
                 <div class="form-group">
                     <label for="url-video">URL Video Demo Produk (video source):</label>
-                    <input type="url" id="url-video" placeholder="https://example.com/video.mp4" required>
+                    <input type="url" id="url-video" placeholder="https://www.w3schools.com/html/mov_bbb.mp4" required>
                 </div>
 
-                <button type="button" class="btn-submit" onclick="alert('Simpan Produk ke Database Berhasil!')">
+                <button type="button" class="btn-submit" onclick="tambahProduk()">
                     Simpan Produk ke Database
                 </button>
             </form>
@@ -218,7 +220,7 @@
 
         <section class="card-section">
             <h2>Panel Pembeli (Katalog & Transaksi)</h2>
-            <div class="product-grid">
+            <div class="product-grid" id="katalog-produk">
 
                 <div class="product-card">
                     <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" alt="Smartphone Premium">
@@ -227,7 +229,8 @@
                     <p class="product-description">Layar 120Hz Super AMOLED, RAM 12GB, Chipset Snapdragon Terbaru.</p>
                     
                     <video controls>
-                        <source "src=https://vt.tiktok.com/ZS4TqVTPB/">
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                        Browser tidak mendukung tag video.
                     </video>
                     
                     <a href="#" class="btn-buy" onclick="alert('Pesanan belum dibayar.')">Beli Sekarang</a>
@@ -237,6 +240,47 @@
         </section>
 
     </div>
+
+    <script>
+        function tambahProduk() {
+            // Ambil data input
+            const nama = document.getElementById('nama').value;
+            const harga = document.getElementById('harga').value;
+            const deskripsi = document.getElementById('deskripsi').value;
+            const urlGambar = document.getElementById('url-gambar').value;
+            const urlVideo = document.getElementById('url-video').value;
+
+            // Cek jika ada input kosong
+            if (!nama || !harga || !deskripsi || !urlGambar || !urlVideo) {
+                alert('Harap isi semua kolom form terlebih dahulu!');
+                return;
+            }
+
+            // Buat elemen kartu baru
+            const kartuBaru = document.createElement('div');
+            kartuBaru.className = 'product-card';
+
+            // Masukkan struktur HTML beserta foto dan video
+            kartuBaru.innerHTML = `
+                <img src="${urlGambar}" alt="${nama}">
+                <h3 class="product-title">${nama}</h3>
+                <div class="product-price">${harga}</div>
+                <p class="product-description">${deskripsi}</p>
+                <video controls>
+                    <source src="${urlVideo}" type="video/mp4">
+                    Browser tidak mendukung tag video.
+                </video>
+                <a href="#" class="btn-buy" onclick="alert('Pesanan belum dibayar.')">Beli Sekarang</a>
+            `;
+
+            // Tampilkan di Panel Pembeli
+            document.getElementById('katalog-produk').appendChild(kartuBaru);
+
+            // Bersihkan form
+            document.getElementById('form-produk').reset();
+            alert('Produk baru berhasil ditambahkan!');
+        }
+    </script>
 
 </body>
 </html>
