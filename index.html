@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GadgetStore Management System</title>
     <style>
-        /* Base & Reset Styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -35,7 +34,6 @@
             letter-spacing: 1px;
         }
 
-        /* Layout Container */
         .container {
             display: flex;
             flex-direction: column;
@@ -44,7 +42,7 @@
             margin: 0 auto;
         }
 
-        /* Kartu Section Pembatas */
+        /* Kartu Pembatas Section (box-shadow & border-radius) */
         .card-section {
             background: #ffffff;
             border-radius: 12px;
@@ -107,7 +105,7 @@
             background-color: #218838;
         }
 
-        /* 3. Fitur Panel Pembeli (Katalog Grid) */
+        /* 3. Fitur Panel Pembeli (Grid Responsif) */
         .product-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -125,6 +123,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
+        /* Tag Gambar <img> */
         .product-card img {
             width: 100%;
             height: 180px;
@@ -133,6 +132,7 @@
             margin-bottom: 12px;
         }
 
+        /* Judul & Harga */
         .product-title {
             font-size: 1.1rem;
             margin-bottom: 5px;
@@ -145,6 +145,7 @@
             margin-bottom: 10px;
         }
 
+        /* Deskripsi Singkat */
         .product-description {
             font-size: 0.85rem;
             color: #666;
@@ -152,6 +153,7 @@
             flex-grow: 1;
         }
 
+        /* Tag Video <video> */
         .product-card video {
             width: 100%;
             border-radius: 6px;
@@ -159,6 +161,7 @@
             background-color: #000;
         }
 
+        /* Tag Hyperlink <a> (Tombol Beli) */
         .btn-buy {
             display: block;
             text-align: center;
@@ -186,33 +189,23 @@
         
         <section class="card-section">
             <h2>Panel Administrator (Manajemen Produk & Media)</h2>
-            <form class="admin-form" id="form-produk">
+            <form class="admin-form">
                 <div class="form-group">
                     <label for="nama">Nama Produk:</label>
                     <input type="text" id="nama" placeholder="Contoh: Smartphone Premium" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="harga">Harga Produk:</label>
-                    <input type="text" id="harga" placeholder="Contoh: Rp 12.000.000" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="deskripsi">Deskripsi Produk:</label>
-                    <textarea id="deskripsi" placeholder="Tuliskan spesifikasi utama..." required></textarea>
+                    <label for="deskripsi-harga">Deskripsi & Harga Produk:</label>
+                    <textarea id="deskripsi-harga" placeholder="Harga: Rp 12.000.000&#10;Spesifikasi: Layar 120Hz, RAM 12GB..." required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="url-gambar">URL Gambar Produk (image source):</label>
-                    <input type="url" id="url-gambar" placeholder="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" required>
+                    <input type="text" id="url-gambar" placeholder="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="url-video">URL Video Demo Produk (video source):</label>
-                    <input type="url" id="url-video" placeholder="https://www.w3schools.com/html/mov_bbb.mp4" required>
-                </div>
-
-                <button type="button" class="btn-submit" onclick="tambahProduk()">
+                <button type="button" class="btn-submit" onclick="alert('Simpan Produk ke Database Berhasil!')">
                     Simpan Produk ke Database
                 </button>
             </form>
@@ -220,67 +213,28 @@
 
         <section class="card-section">
             <h2>Panel Pembeli (Katalog & Transaksi)</h2>
-            <div class="product-grid" id="katalog-produk">
+            <div class="product-grid">
 
                 <div class="product-card">
                     <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" alt="Smartphone Premium">
+                    
                     <h3 class="product-title">Smartphone Premium</h3>
                     <div class="product-price">Rp 12.000.000</div>
+                    
                     <p class="product-description">Layar 120Hz Super AMOLED, RAM 12GB, Chipset Snapdragon Terbaru.</p>
                     
                     <video controls>
-                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                        Browser tidak mendukung tag video.
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+                        Browser Anda tidak mendukung penayangan video.
                     </video>
                     
-                    <a href="#" class="btn-buy" onclick="alert('Pesanan belum dibayar.')">Beli Sekarang</a>
+                    <a href="#" class="btn-buy" onclick="alert('Status Pesanan: Pesanan belum dibayar.')">Beli Sekarang</a>
                 </div>
 
             </div>
         </section>
 
     </div>
-
-    <script>
-        function tambahProduk() {
-            // Ambil data input
-            const nama = document.getElementById('nama').value;
-            const harga = document.getElementById('harga').value;
-            const deskripsi = document.getElementById('deskripsi').value;
-            const urlGambar = document.getElementById('url-gambar').value;
-            const urlVideo = document.getElementById('url-video').value;
-
-            // Cek jika ada input kosong
-            if (!nama || !harga || !deskripsi || !urlGambar || !urlVideo) {
-                alert('Harap isi semua kolom form terlebih dahulu!');
-                return;
-            }
-
-            // Buat elemen kartu baru
-            const kartuBaru = document.createElement('div');
-            kartuBaru.className = 'product-card';
-
-            // Masukkan struktur HTML beserta foto dan video
-            kartuBaru.innerHTML = `
-                <img src="${urlGambar}" alt="${nama}">
-                <h3 class="product-title">${nama}</h3>
-                <div class="product-price">${harga}</div>
-                <p class="product-description">${deskripsi}</p>
-                <video controls>
-                    <source src="${urlVideo}" type="video/mp4">
-                    Browser tidak mendukung tag video.
-                </video>
-                <a href="#" class="btn-buy" onclick="alert('Pesanan belum dibayar.')">Beli Sekarang</a>
-            `;
-
-            // Tampilkan di Panel Pembeli
-            document.getElementById('katalog-produk').appendChild(kartuBaru);
-
-            // Bersihkan form
-            document.getElementById('form-produk').reset();
-            alert('Produk baru berhasil ditambahkan!');
-        }
-    </script>
 
 </body>
 </html>
