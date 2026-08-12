@@ -1,176 +1,242 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GadgetStore Management System</title>
-  <style>
-    /* Reset & Styling Dasar */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GadgetStore Management System</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    body {
-      background-color: #f0f4f8;
-      color: #333;
-      padding: 20px;
-    }
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+        }
 
-    /* Container Panel Pembeli */
-    .customer-panel {
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(30, 64, 175, 0.15);
-      padding: 25px;
-      max-width: 1200px;
-      margin: 0 auto;
-      border-top: 5px solid #1e40af;
-    }
+        /* 1. Header Utama */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
 
-    .panel-title {
-      color: #1e40af;
-      font-size: 24px;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 10px;
-    }
+        header h1 {
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
 
-    /* Grid Katalog Produk */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-    }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    /* Kartu Produk */
-    .product-card {
-      background-color: #ffffff;
-      border: 1px solid #bfdbfe;
-      border-radius: 10px;
-      padding: 15px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+        /* Style Kartu Pembatas Section */
+        .card-section {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e0e0e0;
+        }
 
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 15px rgba(30, 64, 175, 0.2);
-    }
+        .card-section h2 {
+            margin-bottom: 20px;
+            color: #1e3c72;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
 
-    /* Tag Gambar <img> */
-    .product-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 12px;
-    }
+        /* 2. Fitur Panel Admin */
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
 
-    /* Judul & Harga */
-    .product-title {
-      font-size: 18px;
-      color: #1e3a8a;
-      margin-bottom: 6px;
-    }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
 
-    .product-price {
-      font-size: 18px;
-      font-weight: bold;
-      color: #2563eb;
-      margin-bottom: 10px;
-    }
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
 
-    /* Deskripsi Singkat */
-    .product-description {
-      font-size: 14px;
-      color: #4b5563;
-      margin-bottom: 15px;
-      line-height: 1.4;
-    }
+        .form-group input, 
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
 
-    /* Tag Video <video> */
-    .product-video {
-      width: 100%;
-      border-radius: 6px;
-      margin-bottom: 15px;
-      outline: none;
-      border: 1px solid #93c5fd;
-    }
+        .form-group textarea {
+            resize: vertical;
+            height: 80px;
+        }
 
-    /* Tag Hyperlink <a> (Tombol Beli) */
-    .btn-buy {
-      display: block;
-      text-align: center;
-      background-color: #2563eb;
-      color: #ffffff;
-      text-decoration: none;
-      padding: 10px 15px;
-      border-radius: 6px;
-      font-weight: bold;
-      transition: background-color 0.2s ease;
-    }
+        .btn-submit {
+            background-color: #28a745;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-    .btn-buy:hover {
-      background-color: #1d4ed8;
-    }
-  </style>
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+
+        /* 3. Fitur Panel Pembeli */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: #d9534f;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .product-card video {
+            width: 100%;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            background-color: #000;
+        }
+
+        .btn-buy {
+            display: block;
+            text-align: center;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-buy:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
-  <section class="customer-panel">
-    <h2 class="panel-title">🛒 Katalog Produk (Panel Pembeli)</h2>
+    <header>
+        <h1>GadgetStore Management System</h1>
+    </header>
 
-    <div class="product-grid">
+    <div class="container">
+        
+        <section class="card-section">
+            <h2>Panel Administrator (Manajemen Produk & Media)</h2>
+            <form class="admin-form">
+                <div class="form-group">
+                    <label for="nama">Nama Produk:</label>
+                    <input type="text" id="nama" placeholder="Contoh: Smartphone Premium" required>
+                </div>
 
-      <div class="product-card">
-        <div>
-          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop" alt="Smartphone Premium" class="product-img">
-          
-          <h3 class="product-title">Smartphone Premium</h3>
-          <p class="product-price">Rp 12.000.000</p>
-          
-          <p class="product-description">
-            Layar 120Hz AMOLED, RAM 12GB, Memori Internal 256GB, Chipset Snapdragon Flagship.
-          </p>
+                <div class="form-group">
+                    <label for="harga">Harga Produk:</label>
+                    <input type="text" id="harga" placeholder="Contoh: Rp 12.000.000" required>
+                </div>
 
-          <video class="product-video" controls poster="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop">
-            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
-            Browser Anda tidak mendukung tag video.
-          </video>
-        </div>
+                <div class="form-group">
+                    <label for="deskripsi">Deskripsi Produk:</label>
+                    <textarea id="deskripsi" placeholder="Tuliskan spesifikasi utama..." required></textarea>
+                </div>
 
-        <a href="#checkout" class="btn-buy">Beli Sekarang</a>
-      </div>
+                <div class="form-group">
+                    <label for="url-gambar">URL Gambar Produk (image source):</label>
+                    <input type="url" id="url-gambar" placeholder="https://example.com/gambar.jpg" required>
+                </div>
 
-      <div class="product-card">
-        <div>
-          <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&auto=format&fit=crop" alt="Laptop Ultra" class="product-img">
-          
-          <h3 class="product-title">Laptop Ultra</h3>
-          <p class="product-price">Rp 18.500.000</p>
-          
-          <p class="product-description">
-            Layar 14" OLED 2.8K, Prosesor Generasi Terbaru, RAM 16GB SSD 1TB, Baterai Tahan 15 Jam.
-          </p>
+                <div class="form-group">
+                    <label for="url-video">URL Video Demo Produk (video source):</label>
+                    <input type="url" id="url-video" placeholder="https://example.com/video.mp4" required>
+                </div>
 
-          <video class="product-video" controls poster="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&auto=format&fit=crop">
-            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" type="video/mp4">
-            Browser Anda tidak mendukung tag video.
-          </video>
-        </div>
+                <button type="button" class="btn-submit" onclick="alert('Simpan Produk ke Database Berhasil!')">
+                    Simpan Produk ke Database
+                </button>
+            </form>
+        </section>
 
-        <a href="#checkout" class="btn-buy">Beli Sekarang</a>
-      </div>
+        <section class="card-section">
+            <h2>Panel Pembeli (Katalog & Transaksi)</h2>
+            <div class="product-grid">
+
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500" alt="Smartphone Premium">
+                    <h3 class="product-title">Smartphone Premium</h3>
+                    <div class="product-price">Rp 12.000.000</div>
+                    <p class="product-description">Layar 120Hz Super AMOLED, RAM 12GB, Chipset Snapdragon Terbaru.</p>
+                    
+                    <video controls>
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    </video>
+                    
+                    <a href="#" class="btn-buy" onclick="alert('Pesanan belum dibayar.')">Beli Sekarang</a>
+                </div>
+
+            </div>
+        </section>
 
     </div>
-  </section>
 
 </body>
 </html>
-{
